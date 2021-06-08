@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{post.title}}{% endblock %}
+
+{% block body %}
+    <div class="col-7 mt-4 mx-4">
+
+     {# image post #}
+
+        <div class="row post mb-1">
+            <div class="col-12">
+                <img src="{{asset('uploads/')}}{{post.image}}" style="width: 400px;" alt="img">
+            </div>
+        </div>
+     {# details post #}
+
+        <div class="row post mb-1">
+            <div class="col-12">
+                <h2 class="text-capitalize">{{post.title}}</h2>
+                <p class="added"><a href="#" class="username">oubeid </a>{{post.time|date("F jS \\a g:ia")}}</p>
+                <p>{{post.body}}</p>
+                
+            </div>
+        </div>
+        <div class="row post mb-1">
+            <div class="col-12">
+                <h2 class="text-capitalize">Commentaires</h2>
+                <hr>
+                {% if is_granted('ROLE_USER') %}
+                    <form action="{{path('comment_add')}}" method="post">
+                        <div class="form-group">
+                            <textarea name="body" id="body" placeholder="Ajouter un commentaire " class="form-control" cols="30" rows="10"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">Envoyer</button>
+                        </div>
+                        <input type="hidden" name="_csrf_token" value="{{csrf_token('authenticate')}}">
+                        <input type="hidden" name="post_id" value="{{post.id}}">
+                    </form>
+                {% else %}
+                    <a href="{{path('security_login')}}" class="btn btn-link">Connectez vous pour commenter</a>
+                {% endif %}
+                
+            </div>
+        </div> 
+    </div>
+
+    {# list des commentaires #}
+
+    <div class="col-sm-4 container col-12">
+     <div class="row post mt-4">
+     <div class="col-12">
+        <h2 class="text-capitalize">Commentaires <span class="badge badge-dark">{{ comments|length }}</span></h2>
+        <hr>
+        <div class="row post mb-1">
+            {% if comments != null %}
+                {% for c in comments %}
+                    <div class="col-12">
+                        <strong class="latest">{{c.user.username}}</strong>
+                        <p class="latest">{{c.body}}</p>
+                        <hr/>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No comment</p>
+                
+            {% endif %}
+        </div>
+    </div>
+    </div>
+ </div>
+{% endblock %}

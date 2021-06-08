@@ -1,0 +1,8 @@
+<div class="col-12">
+
+{{ form_start(form) }}
+    {{ form_widget(form) }}
+    <button  class="btn btn-light">{{ button_label|default('Save') }}</button>
+    {{ form_errors(form) }}
+{{ form_end(form) }}
+</div>
